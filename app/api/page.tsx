@@ -1,13 +1,10 @@
 "use client"
 import {useEffect, useState} from "react";
-import type {NextApiResponse} from 'next';
 import Header from '../header'
 
 export default function ApiPage() {
     const [apiData, setApiData] = useState([""]);
     const [pressedFetch, setPressedFetch] = useState(false);
-    const [response, setResponse] = useState<NextApiResponse>();
-
 
     const [url, setUrl] = useState<string[] | null>(null);
 
@@ -17,6 +14,7 @@ export default function ApiPage() {
         if (pressedFetch) {
             setPressedFetch(false);
             if (timeLeft < 1) {
+
                 // fetch data
                 setTimeLeft(90);
             }
@@ -46,8 +44,6 @@ export default function ApiPage() {
                 <br/>
                 {timeLeft > 0 &&
                     <p>Time left: {Math.floor(timeLeft / 60)} minutes : {Math.floor(timeLeft % 60)} seconds</p>}
-
-                {/*<button onClick={() => setUrl()}>Fetch data all</button>*/}
             </div>
 
         </section>
