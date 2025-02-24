@@ -1,15 +1,9 @@
-import Header from './header'
-
-const hyperLinks = [
-    {
-        url: "api", buttonName: "Crypto api"
-    },
-]
+import Header from '@/(components)/header'
 
 export default function Home() {
     return (
         <>
-            <Header hyperLinks={hyperLinks}/>
+            <Header/>
         </>
     );
 }

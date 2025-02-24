@@ -1,49 +1,42 @@
 "use client"
 import {useEffect, useState} from "react";
-import Header from '../header'
+import Header from '@/(components)/header'
+import ApiCall, {CryptoResponse} from "@/app/api/api";
 
 export default function ApiPage() {
-    const [apiData, setApiData] = useState([""]);
-    const [pressedFetch, setPressedFetch] = useState(false);
+    const [apiData, setApiData] = useState<CryptoResponse | null>();
 
-    const [url, setUrl] = useState<string[] | null>(null);
-
-    const [timeLeft, setTimeLeft] = useState(0);
-
-    useEffect(() => {
-        if (pressedFetch) {
-            setPressedFetch(false);
-            if (timeLeft < 1) {
-
-                // fetch data
-                setTimeLeft(90);
-            }
-        }
-
-    }, [pressedFetch]);
+    const getApi = async () => {
+        const data = await ApiCall();
+        setApiData(data);
+    }
 
     useEffect(() => {
-        if (timeLeft > 0) {
-            const interval = setInterval(() => {
-                setTimeLeft((prev) => prev - 1);
-            }, 1000);
+        getApi();
 
+        const interval = setInterval(() => {
+            getApi();
+        }, 60000);
 
-            // Clean up the interval when the component unmounts
-            return () => clearInterval(interval);
-        }
-    }, [timeLeft]);
+        // Clean up the interval when the component unmounts
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <section className="w-full flex flex-col items-center">
             <Header/>
             <div>
-                <button onClick={() => setPressedFetch(true)}>Fetch data</button>
                 <br/>
-                {apiData && apiData.length > 0 && <div>{apiData} + hello</div>}
+                {apiData && apiData.Data.LIST.map((item, index) => {
+                    return (
+                        <ul key={index} className="flex flex-row">
+                            <li>{item.NAME}</li>
+                            <li><img className="h-[30px]" src={item.LOGO_URL} alt={item.NAME}/></li>
+                            <li>{item.SYMBOL}</li>
+                        </ul>
+                    );
+                })}
                 <br/>
-                {timeLeft > 0 &&
-                    <p>Time left: {Math.floor(timeLeft / 60)} minutes : {Math.floor(timeLeft % 60)} seconds</p>}
             </div>
 
         </section>
