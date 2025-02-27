@@ -2,6 +2,7 @@
 import {useEffect, useState} from "react";
 import Header from '@/(components)/header'
 import ApiCall, {CryptoResponse} from "@/app/api/api";
+import Card from "@/(components)/card";
 
 export default function ApiPage() {
     const [apiData, setApiData] = useState<CryptoResponse | null>();
@@ -23,25 +24,15 @@ export default function ApiPage() {
     }, []);
 
     return (
-        <section className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center">
             <Header/>
-            <div>
-                <br/>
+            <div className="flex flex-col items-center pl-[5%] pr-[5%] mt-10 w-full">
                 {apiData && apiData.Data.LIST.map((item, index) => {
                     return (
-                        <ul key={index} className="flex gap-4 w-[500px]">
-                            <li>{item.NAME}</li>
-                            <li><img className="h-[30px]" src={item.LOGO_URL} alt={item.NAME}/></li>
-                            <li>{item.SYMBOL}</li>
-                            <li>{Math.ceil(item.SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD * 100) / 100}%</li>
-                            <li>{Math.ceil(item.SPOT_MOVING_7_DAY_CHANGE_PERCENTAGE_CONVERSION * 100) / 100}%</li>
-                            <li>{Math.round(item.SPOT_MOVING_30_DAY_CHANGE_PERCENTAGE_USD * 100) / 100}%</li>
-                        </ul>
+                        <Card key={index} item={item}/>
                     );
                 })}
-                <br/>
             </div>
-
-        </section>
+        </div>
     );
 }

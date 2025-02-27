@@ -13,19 +13,14 @@ export interface CryptoResponse {
     };
 }
 
-interface CryptoAsset {
-    ID: number;
+export interface CryptoAsset {
     SYMBOL: string;
     NAME: string;
     LOGO_URL: string;
-    SUPPLY_MAX: number;
-    SUPPLY_CIRCULATING: number;
     PRICE_USD: number;
     SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD: number;
     SPOT_MOVING_7_DAY_CHANGE_PERCENTAGE_CONVERSION: number;
     SPOT_MOVING_30_DAY_CHANGE_PERCENTAGE_USD: number;
-    CREATED_ON: number;
-    UPDATED_ON: number;
 }
 
 export default async function ApiCall({parameters = "asset/v1/top/list?sort_direction=DESC"}: ApiCallProps = {}): Promise<CryptoResponse | null> {
