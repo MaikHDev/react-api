@@ -1,14 +1,17 @@
-"use client"
+"use client";
+
+import {useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
-import Header from '@/(components)/header'
 import ApiCall, {CryptoResponse} from "@/app/api/api";
+import Header from "@/(components)/header";
 import SmallCard from "@/(components)/smallCard";
 
-export default function ApiPage() {
+export default function SearchPage() {
+    const search = useSearchParams().get("q");
     const [apiData, setApiData] = useState<CryptoResponse>();
 
     const getApi = async () => {
-        const data = await ApiCall();
+        const data = await ApiCall({parameters: `asset/v1/search?search_string=${search != null ? search : ''}&limit=100`});
         setApiData(data);
     }
 
@@ -27,7 +30,7 @@ export default function ApiPage() {
         <div className="w-full flex flex-col items-center">
             <Header/>
             <div className="flex flex-col items-center pl-[5%] pr-[5%] mt-10 w-full">
-                {apiData?.Err && (
+                {apiData && Object.keys(apiData.Err).length != 0 && (
                     <>
                         <div>{apiData.Err?.type}</div>
                         <div>{apiData.Err?.message}</div>
@@ -39,7 +42,7 @@ export default function ApiPage() {
                         <SmallCard key={index} item={item}/>
                     );
                 })}
-                {apiData && apiData.Data.LIST.length == 0 && !apiData.Err && (
+                {apiData && apiData.Data.LIST.length == 0 && Object.keys(apiData.Err).length == 0 && (
                     <>
                         <span>No items found!</span>
                     </>

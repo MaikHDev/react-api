@@ -1,15 +1,19 @@
+"use client"
+
 import {CryptoAsset} from "@/app/api/api";
+import Link from "next/link";
 
 interface CardProps {
     item: CryptoAsset,
 }
 
-export default function Card({item}: CardProps) {
+export default function SmallCard({item}: CardProps) {
     return (
-        <ul className="flex w-[70%] gap-5">
-            <li className="w-[14.2%]">{item.NAME}</li>
-            <li className="w-[14.2%]"><img className="h-[30px]" src={item.LOGO_URL} alt={item.NAME}/></li>
-            <li className="w-[14.2%]">{item.SYMBOL}</li>
+        <Link href={`/api/${item.NAME}`}
+              className="flex sm:w-[80%] w-[50%] max-w-[1000px] gap-5 justify-between p-5 bg-gray-400 text-black mt-2 mb-2 rounded cursor-pointer list-none">
+            <li className="">{item.NAME}</li>
+            <li className=""><img className="h-[30px]" src={item.LOGO_URL} alt={item.NAME}/></li>
+            <li className="">{item.SYMBOL}</li>
             {item.SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD && (
                 <li className="">{item.SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD >= 0.01 && <>+</>}{Math.round(item.SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD * 100) / 100}%
                     last 24h
@@ -25,9 +29,10 @@ export default function Card({item}: CardProps) {
                     last month
                 </li>
             )}
-            <li className="w-[14.2%]">
+
+            <li className="">
                 <button>Favorite</button>
             </li>
-        </ul>
+        </Link>
     );
 }

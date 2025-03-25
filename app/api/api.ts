@@ -1,3 +1,5 @@
+"use server"
+
 interface ApiCallProps {
     parameters?: string
 }
@@ -19,13 +21,14 @@ export interface CryptoResponse {
 }
 
 export interface CryptoAsset {
-    SYMBOL: string;
     NAME: string;
+    SYMBOL: string;
     LOGO_URL: string;
-    PRICE_USD: number;
-    SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD: number;
-    SPOT_MOVING_7_DAY_CHANGE_PERCENTAGE_CONVERSION: number;
-    SPOT_MOVING_30_DAY_CHANGE_PERCENTAGE_USD: number;
+    CREATED_ON: number;
+    PRICE_USD?: number;
+    SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD?: number;
+    SPOT_MOVING_7_DAY_CHANGE_PERCENTAGE_CONVERSION?: number;
+    SPOT_MOVING_30_DAY_CHANGE_PERCENTAGE_USD?: number;
 }
 
 export default async function ApiCall({parameters = "asset/v1/top/list?sort_direction=DESC"}: ApiCallProps = {}): Promise<CryptoResponse> {
@@ -59,7 +62,7 @@ export default async function ApiCall({parameters = "asset/v1/top/list?sort_dire
                 LIST: [],
             },
             Err: {
-                custom: error.message,
+                custom: error.toString(),
             }
         };
     }
