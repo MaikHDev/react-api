@@ -5,7 +5,7 @@ import ApiCall, {CryptoResponse} from "@/app/api/api";
 import Card from "@/(components)/card";
 
 export default function ApiPage() {
-    const [apiData, setApiData] = useState<CryptoResponse | null>();
+    const [apiData, setApiData] = useState<CryptoResponse>();
 
     const getApi = async () => {
         const data = await ApiCall();
@@ -27,11 +27,20 @@ export default function ApiPage() {
         <div className="w-full flex flex-col items-center">
             <Header/>
             <div className="flex flex-col items-center pl-[5%] pr-[5%] mt-10 w-full">
-                {apiData && apiData.Data.LIST.map((item, index) => {
+                {apiData && apiData.Data.LIST?.map((item, index) => {
                     return (
                         <Card key={index} item={item}/>
                     );
                 })}
+                {apiData && apiData.Data.LIST.length == 0 && apiData.Err && (
+                    <>
+                        <div>{apiData.Err?.type}</div>
+                        <div>{apiData.Err?.message}</div>
+                        <div>{apiData.Err?.custom}</div>
+                    </>
+                    )
+                }
+
             </div>
         </div>
     );

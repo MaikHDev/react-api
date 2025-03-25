@@ -4,13 +4,18 @@ interface ApiCallProps {
 
 export interface CryptoResponse {
     Data: {
-        STATS: {
+        STATS?: {
             PAGE: number;
             PAGE_SIZE: number;
             TOTAL_ASSETS: number;
         };
-        LIST: CryptoAsset[];
+        LIST: CryptoAsset[] | [];
     };
+    Err: {
+        type?: number;
+        message?: string;
+        custom?: string;
+    }
 }
 
 export interface CryptoAsset {
@@ -23,7 +28,7 @@ export interface CryptoAsset {
     SPOT_MOVING_30_DAY_CHANGE_PERCENTAGE_USD: number;
 }
 
-export default async function ApiCall({parameters = "asset/v1/top/list?sort_direction=DESC"}: ApiCallProps = {}): Promise<CryptoResponse | null> {
+export default async function ApiCall({parameters = "asset/v1/top/list?sort_direction=DESC"}: ApiCallProps = {}): Promise<CryptoResponse> {
     const apiUrl = `https://data-api.coindesk.com/${encodeURI(parameters)}`;
 
     try {
@@ -37,10 +42,25 @@ export default async function ApiCall({parameters = "asset/v1/top/list?sort_dire
         if (response.ok) {
             return await response.json();
         } else {
-            return null;
+            const data: CryptoResponse = await response.json();
+            return {
+                Data: {
+                    STATS: undefined,
+                    LIST: [],
+                },
+                Err: data.Err
+            }
         }
 
     } catch (error: any) {
-        return null;
+        return {
+            Data: {
+                STATS: undefined,
+                LIST: [],
+            },
+            Err: {
+                custom: error.message,
+            }
+        };
     }
 };
