@@ -1,22 +1,25 @@
-"use client";
+"use client"
 
-import {useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import ApiCall, {CryptoResponse} from "@/app/api/api";
 import Header from "@/(components)/header";
-import SmallCard from "@/(components)/smallCard";
+import Card from "@/(components)/card";
 import LoadAnimation from "@/(components)/loadAnimation";
 
-export default function SearchPage() {
-    const search = useSearchParams().get("q");
+interface ItemProps {
+    slug: string;
+}
+
+export default function Item({slug}: ItemProps) {
     const [apiData, setApiData] = useState<CryptoResponse>();
     const [loadingAnimation, setLoadingAnimation] = useState(false);
+
 
     const getApi = async () => {
         setLoadingAnimation(true);
 
         await ApiCall({
-            parameters: `asset/v1/search?search_string=${search != null ? search : ''}&limit=100`,
+            parameters: `asset/v2/metadata?assets=${slug}&quote_asset=EUR`
         }).then((data) => {
             setLoadingAnimation(false);
             setApiData(data);
@@ -48,12 +51,10 @@ export default function SearchPage() {
                         <div>{apiData.Err?.custom}</div>
                     </>
                 )}
-                {apiData?.Data.LIST?.map((item, index) => {
-                    return (
-                        <SmallCard key={index} item={item}/>
-                    );
-                })}
-                {apiData && apiData.Data.LIST?.length == 0 && Object.keys(apiData.Err).length == 0 && (
+                {apiData && (
+                    <Card item={apiData.Data[slug]}/>
+                )}
+                {apiData && apiData.Data[slug] == null && Object.keys(apiData.Err).length == 0 && (
                     <>
                         <span>No items found!</span>
                     </>

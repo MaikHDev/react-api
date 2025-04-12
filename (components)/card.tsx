@@ -1,33 +1,29 @@
-import {CryptoAsset} from "@/app/api/api";
+"use client"
+
+import {CryptoAsset, MetaData} from "@/app/api/api";
+import BarChart from "@/(components)/barChart";
 
 interface CardProps {
-    item: CryptoAsset,
+    item: { PAGE: number; PAGE_SIZE: number; TOTAL_ASSETS: number }
+        | CryptoAsset[]
+        | MetaData
+        | undefined;
 }
 
 export default function Card({item}: CardProps) {
     return (
-        <ul className="flex w-[70%] gap-5">
-            <li className="w-[14.2%]">{item.NAME}</li>
-            <li className="w-[14.2%]"><img className="h-[30px]" src={item.LOGO_URL} alt={item.NAME}/></li>
-            <li className="w-[14.2%]">{item.SYMBOL}</li>
-            {item.SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD && (
-                <li className="">{item.SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD >= 0.01 && <>+</>}{Math.round(item.SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD * 100) / 100}%
-                    last 24h
-                </li>
+        <section>
+            {item && (
+                <div>
+                    {'UPDATED_ON' in item && (
+                        <>
+                            <span>Created on: {new Date(item.CREATED_ON * 1000).toDateString()}</span>
+                            <span>Updated on: {new Date(item.UPDATED_ON * 1000).toDateString()}</span>
+                            <BarChart/>
+                        </>
+                    )}
+                </div>
             )}
-            {item.SPOT_MOVING_7_DAY_CHANGE_PERCENTAGE_CONVERSION && (
-                <li className="">{item.SPOT_MOVING_7_DAY_CHANGE_PERCENTAGE_CONVERSION >= 0.01 && <>+</>}{Math.round(item.SPOT_MOVING_7_DAY_CHANGE_PERCENTAGE_CONVERSION * 100) / 100}%
-                    last 7 days
-                </li>
-            )}
-            {item.SPOT_MOVING_30_DAY_CHANGE_PERCENTAGE_USD && (
-                <li className="">{item.SPOT_MOVING_30_DAY_CHANGE_PERCENTAGE_USD >= 0.01 && <>+</>}{Math.round(item.SPOT_MOVING_30_DAY_CHANGE_PERCENTAGE_USD * 100) / 100}%
-                    last month
-                </li>
-            )}
-            <li className="w-[14.2%]">
-                <button>Favorite</button>
-            </li>
-        </ul>
+        </section>
     );
 }
