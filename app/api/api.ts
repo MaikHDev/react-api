@@ -26,11 +26,15 @@ export interface CryptoResponse {
 }
 
 export interface CryptoAsset {
+    ID: number;
     NAME: string;
     SYMBOL: string;
     LOGO_URL: string;
     CREATED_ON: number;
     PRICE_USD?: number;
+    SPOT_MOVING_24_HOUR_CHANGE_USD?: number;
+    SPOT_MOVING_7_DAY_CHANGE_USD?: number;
+    SPOT_MOVING_30_DAY_CHANGE_USD?: number;
     SPOT_MOVING_24_HOUR_CHANGE_PERCENTAGE_USD?: number;
     SPOT_MOVING_7_DAY_CHANGE_PERCENTAGE_CONVERSION?: number;
     SPOT_MOVING_30_DAY_CHANGE_PERCENTAGE_USD?: number;
@@ -38,6 +42,8 @@ export interface CryptoAsset {
 
 export interface MetaData extends CryptoAsset {
     UPDATED_ON: number;
+    WEBSITE_URL: string;
+    BLOG_URL: string;
 }
 
 export default async function ApiCall(
